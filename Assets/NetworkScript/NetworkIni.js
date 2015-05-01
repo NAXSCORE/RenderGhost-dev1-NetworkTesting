@@ -1,12 +1,13 @@
 ﻿
 var gameName:String = "RenderGhost_Test_01";
 var playMode:int;
+
 private var refreshing:boolean;
 private var hostData:HostData[];
 private var guiMargin:int = 50;
 private var showModeMenu:boolean = true;
+
 function Start(){
-	
 }
 
 function startServer(){
@@ -15,23 +16,12 @@ function startServer(){
 }
 
 
-function playerIni(){
-		 Destroy(gameObject.Find("MainCamera"));
-		 gameObject.Find("FirstPersonCharacter").GetComponent(Camera).enabled = true;
-		 gameObject.Find("FPSController").GetComponent(CharacterController).enabled = true;
-//		 var characterMotor : CharacterMotor;
-		 gameObject.Find("FPSController").GetComponent(UnityStandardAssets.Characters.FirstPerson.FirstPersonController).enabled = true;
+function refreshHostList(){
+	MasterServer.RequestHostList(gameName);
+	refreshing = true;
+//	yield(WaitForSeconds
 }
-function nonPlayrIni(){
-	if(playMode != 1){
-//				 var characterController : CharacterController;
-//				 characterController = GetComponent( CharacterController );
-//				 characterController.enabled = false;
-		 
-//		 Destroy(gameObject.Find("FirstPersonCharacter"));
-		 Debug.Log("Disable FPC");
-	}
-}
+
 
 function Update(){
 	if(refreshing){
@@ -43,6 +33,28 @@ function Update(){
 			
 		}
 	}
+}
+
+//Play
+function playerIni(){
+		 Destroy(gameObject.Find("MainCamera"));
+		 gameObject.Find("FirstPersonCharacter").GetComponent(Camera).enabled = true;
+		 gameObject.Find("FirstPersonCharacter").GetComponent(AudioListener).enabled = true;
+		 gameObject.Find("FPSController").GetComponent(CharacterController).enabled = true;
+//		 var characterMotor : CharacterMotor;
+		 gameObject.Find("FPSController").GetComponent(UnityStandardAssets.Characters.FirstPerson.FirstPersonController).enabled = true;
+
+	PlayerPrefs.SetInt("playModeVar",playMode); 
+}
+function nonPlayrIni(){
+
+	gameObject.Find("MainCamera").GetComponent(AudioListener).enabled = true;
+	if(playMode != 1){
+		 Debug.Log("Disable FPC");
+	}
+
+	PlayerPrefs.SetInt("playModeVar",playMode); 
+
 }
 
 
@@ -90,4 +102,3 @@ function OnGUI(){
 	}
 }
 
-//YOLO
